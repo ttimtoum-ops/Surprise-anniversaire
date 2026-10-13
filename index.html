@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#b51f4b">
+<title>Pour toi, mon amour ♥</title>
+<style>
+:root{--rose:#ffe5ed;--pink:#f5a5bc;--red:#b51f4b;--wine:#741632;--cream:#fffafa;--gold:#c08a55}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Georgia,'Times New Roman',serif;color:var(--wine);background:linear-gradient(145deg,#fff8fb 0%,#ffdce7 52%,#f6a7bf 100%);display:flex;align-items:center;justify-content:center;padding:18px;overflow-x:hidden}
+body:before,body:after{content:"♥";position:fixed;color:#c62d5b;opacity:.1;font-size:clamp(130px,24vw,240px);z-index:-1;pointer-events:none}
+body:before{top:-65px;left:-24px;transform:rotate(-18deg)}body:after{bottom:-95px;right:-15px;transform:rotate(18deg)}
+.card{width:min(100%,560px);background:rgba(255,250,251,.96);border:1px solid #f0a0b8;border-radius:28px;padding:clamp(22px,5vw,40px);box-shadow:0 18px 55px #8c17352b;text-align:center;position:relative}
+.top-heart{font-size:44px;display:block;filter:drop-shadow(0 5px 5px #c63b5a33)}
+.eyebrow{font:700 11px Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:#c23c63}
+h1{font-size:clamp(30px,7vw,43px);line-height:1.1;margin:12px 0;color:var(--red)}
+p{line-height:1.6}
+button{border:0;border-radius:999px;padding:14px 22px;font:700 15px Arial,sans-serif;cursor:pointer;background:var(--red);color:white;box-shadow:0 7px 18px #b51f4b35;transition:transform .15s}
+button:hover{transform:translateY(-2px)}button:focus-visible{outline:3px solid var(--wine);outline-offset:3px}
+input{font:18px Arial,sans-serif;letter-spacing:10px;text-align:center;width:180px;max-width:100%;padding:14px 10px;border:2px solid #ef9ab3;border-radius:14px;background:white;color:var(--wine);outline:none}
+input:focus{border-color:var(--red);box-shadow:0 0 0 4px #f7bfd0}
+.error{min-height:22px;color:var(--red);font:14px Arial,sans-serif;margin:10px 0 0}
+.hidden{display:none!important}
+.giftbox{background:linear-gradient(135deg,#fff0f5,#ffe0e9);border:1px dashed #d64c73;border-radius:22px;padding:24px 18px;margin:22px 0}
+.gift-icon{font-size:62px}.gift-name{font-size:clamp(25px,6vw,32px);color:var(--red);margin:10px 0}
+.gift-desc{font-size:16px}.small{font:12px/1.55 Arial,sans-serif;color:#925267;margin-top:22px}
+.progress{display:flex;justify-content:center;gap:8px;margin:18px 0}
+.dot{width:9px;height:9px;border-radius:50%;background:#f2c4d2}.dot.done{background:var(--red)}
+.letter{background:#fff5f0;border:1px solid #e9b6a9;border-radius:18px;padding:24px 21px;text-align:left;white-space:pre-line;line-height:1.8;font-size:17px}
+.signature{text-align:right;font-style:italic;color:var(--red);margin-top:20px}
+.heartline{color:#d93666;letter-spacing:7px;margin:16px 0}
+@media(prefers-reduced-motion:no-preference){.top-heart{animation:beat 1.8s infinite}@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}}
+</style>
+</head>
+<body>
+<main class="card">
+  <section id="pinScreen">
+    <span class="top-heart">♥</span>
+    <div class="eyebrow">Une surprise rien que pour toi</div>
+    <h1>Joyeux anniversaire,<br>mon amour 💌</h1>
+    <p>J’ai préparé plusieurs petites surprises pour toi…<br>Entre notre code secret pour ouvrir ton cadeau.</p>
+    <form id="pinForm">
+      <label for="pin" class="eyebrow" style="display:block;margin:18px 0 10px;letter-spacing:1px">Notre code secret à 4 chiffres</label>
+      <input id="pin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" aria-label="Code secret à quatre chiffres" required>
+      <p><button type="submit" style="margin-top:16px">Ouvrir ma surprise ♥</button></p>
+      <div id="error" class="error" role="alert"></div>
+    </form>
+    <div class="heartline">♡ · ♡ · ♡</div>
+    <p class="small">Un petit monde préparé avec amour, juste pour toi.</p>
+  </section>
+
+  <section id="surpriseScreen" class="hidden">
+    <span class="top-heart">🎁</span>
+    <div class="eyebrow">Rien que pour toi</div>
+    <h1>Trois surprises et une lettre 💗</h1>
+    <p>Tu as droit aux trois cadeaux, promis ! Le hasard choisira seulement l’ordre dans lequel tu les découvriras.</p>
+    <div class="progress" id="progress" aria-label="Progression"></div>
+    <div id="giftBox" class="giftbox hidden" aria-live="polite">
+      <div id="giftIcon" class="gift-icon">💌</div>
+      <div id="giftName" class="gift-name"></div>
+      <p id="giftDesc" class="gift-desc"></p>
+    </div>
+    <button id="revealButton">Découvrir ma surprise ✨</button>
+    <p id="hint" class="small">Il reste trois surprises à découvrir…</p>
+  </section>
+
+  <section id="letterScreen" class="hidden">
+    <span class="top-heart">💌</span>
+    <div class="eyebrow">La dernière surprise</div>
+    <h1>Quelques mots pour toi</h1>
+    <div class="letter" id="letterText">Mon amour,
+
+Joyeux anniversaire, mon cœur. ❤️
+
+Je voulais t’offrir plus que des cadeaux : des petits moments à nous, des souvenirs à fabriquer ensemble et une occasion de te rappeler à quel point tu comptes pour moi.
+
+J’espère que ces surprises te feront sourire autant que j’ai aimé les préparer. Peu importe le programme ou l’endroit, mon moment préféré reste celui que je passe avec toi. Nous avons certes eu des moments difficile mais cela à batis notre relation et maintenant nous sommes prêt à continuer ensemble main dans la main jusqu'à ce que la mort nous sépare.
+
+Merci d’être toi, et merci de partager ta vie avec moi. Je te souhaite une journée aussi belle que l’amour que j’ai pour toi.
+
+Je t’aime, aujourd’hui et tous les jours. 💗</div>
+    <div class="signature">Pour toujours, avec tout mon amour ♥</div>
+    <div class="heartline">♡ · ♡ · ♡</div>
+    <p class="small">P.-S. : les trois cadeaux sont bien à toi. Cette promesse ne dépend pas du hasard. 🥰</p>
+  </section>
+</main>
+<script>
+/* PERSONNALISATION : remplace 1234 par votre code secret à quatre chiffres.
+   C'est un écran symbolique, pas une vraie protection : le code est visible dans le code source. */
+const PIN = "2205";
+
+/* Tous les cadeaux sont garantis. Le site mélange seulement l'ordre des révélations. */
+const gifts = [
+  {id:"money", icon:"💶💌", name:"80 € rien que pour toi", desc:"Une enveloppe d’argent de poche pour te faire plaisir comme tu en as envie. Ce cadeau est garanti, mon amour."},
+  {id:"dinner", icon:"🍔🍟", name:"Une soirée chez Memphis Coffee", desc:"Un repas en amoureux dans une ambiance diner américain. La date est fixé aux 24 au soir, soit présente et aussi belle que d'habitude on prendra ce qui nous fait envie."},
+  {id:"bowling", icon:"🎳💖", name:"Une soirée bowling", desc:"Une sortie à deux, des fous rires et une revanche obligatoire si besoin ! On choisira la date ensemble."}
+];
+
+const pinForm=document.getElementById("pinForm");
+const pinInput=document.getElementById("pin");
+const error=document.getElementById("error");
+const pinScreen=document.getElementById("pinScreen");
+const surpriseScreen=document.getElementById("surpriseScreen");
+const letterScreen=document.getElementById("letterScreen");
+const giftBox=document.getElementById("giftBox");
+const revealButton=document.getElementById("revealButton");
+const hint=document.getElementById("hint");
+const progress=document.getElementById("progress");
+let shuffledGifts=[];
+let nextGift=0;
+
+function shuffle(items){
+  const copy=items.slice();
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+}
+function drawProgress(){
+  progress.replaceChildren();
+  for(let i=0;i<gifts.length;i++){
+    const dot=document.createElement("span");
+    dot.className="dot"+(i<nextGift?" done":"");
+    dot.setAttribute("aria-hidden","true");
+    progress.appendChild(dot);
+  }
+}
+pinForm.addEventListener("submit",function(e){
+  e.preventDefault();
+  if(!/^\d{4}$/.test(pinInput.value)){error.textContent="Entre exactement 4 chiffres, mon cœur.";return;}
+  if(pinInput.value===PIN){
+    shuffledGifts=shuffle(gifts);
+    pinScreen.classList.add("hidden");
+    surpriseScreen.classList.remove("hidden");
+    drawProgress();
+  } else {
+    error.textContent="Ce n’est pas le bon code, mon amour. Réessaie 💗";
+    pinInput.value="";
+    pinInput.focus();
+  }
+});
+revealButton.addEventListener("click",function(){
+  if(nextGift>=shuffledGifts.length)return;
+  const gift=shuffledGifts[nextGift];
+  document.getElementById("giftIcon").textContent=gift.icon;
+  document.getElementById("giftName").textContent=gift.name;
+  document.getElementById("giftDesc").textContent=gift.desc;
+  giftBox.classList.remove("hidden");
+  nextGift++;
+  drawProgress();
+  if(nextGift<shuffledGifts.length){
+    revealButton.textContent="Découvrir la prochaine surprise 💝";
+    hint.textContent=`Encore ${shuffledGifts.length-nextGift} surprise(s) avant la lettre d’amour…`;
+  } else {
+    revealButton.textContent="Lire ma lettre d’amour 💌";
+    hint.textContent="Les trois cadeaux sont révélés. Il reste quelques mots rien que pour toi.";
+    revealButton.onclick=function(){
+      surpriseScreen.classList.add("hidden");
+      letterScreen.classList.remove("hidden");
+    };
+  }
+});
+</script>
+</body>
+</html>
